@@ -1,0 +1,36 @@
+
+
+
+/*
+CREATE FUNCTION signMessage( IN message CHAR, IN alias CHAR)
+RETURNS CHAR
+LANGUAGE JAVA 
+EXTERNAL NAME "SOAPClientSample.signMessage";
+*/
+CREATE FUNCTION generateHMAC( IN message CHAR, IN secret CHAR)
+RETURNS CHAR
+LANGUAGE JAVA 
+EXTERNAL NAME "ePaymentUtils.generateHmac";
+
+CREATE FUNCTION generateFormData( IN clientId CHAR, IN hmac CHAR, IN data CHAR)
+RETURNS CHAR
+LANGUAGE JAVA 
+EXTERNAL NAME "ePaymentUtils.generateFormData";
+
+CREATE FUNCTION generateFormDataClientId( IN clientId CHAR, IN hmac CHAR, IN data CHAR, IN eServiceClientId CHAR)
+RETURNS CHAR
+LANGUAGE JAVA 
+EXTERNAL NAME "ePaymentUtils.generateFormDataClientId";
+
+
+
+CREATE FUNCTION generateBASE64( IN InputRoot REFERENCE) RETURNS CHAR
+BEGIN
+	DECLARE bodyBlob BLOB ASBITSTREAM(InputRoot.JSON.Data);
+	-- DECLARE bodyAsChar CHAR CAST(bodyBlob AS CHAR CCSID 1208 Encoding 815);
+	DECLARE bodyAsChar CHAR CAST(bodyBlob AS CHAR CCSID 1208);
+	DECLARE bodyAsBase64 CHAR BASE64ENCODE(bodyAsChar);
+	RETURN bodyAsBase64;
+END;
+
+
